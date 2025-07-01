@@ -9,7 +9,7 @@ public class SwipeThrow : MonoBehaviour {
     private bool isSwiping = false;
     [SerializeField] private float forceMultiplier = 0.005f;
 
-    void Update() {
+    private void Update() {
         if (Input.touchSupported && Input.touchCount > 0) {
             Touch touch = Input.GetTouch(0);
             HandleTouch(touch.phase, touch.position);
@@ -23,7 +23,7 @@ public class SwipeThrow : MonoBehaviour {
         }
     }
 
-    void HandleTouch(TouchPhase phase, Vector2 position) {
+    private void HandleTouch(TouchPhase phase, Vector2 position) {
         switch (phase) {
             case TouchPhase.Began:
                 swipeStartPos = position;
@@ -35,7 +35,7 @@ public class SwipeThrow : MonoBehaviour {
         }
     }
 
-    void ShootFromSwipe() {
+    private void ShootFromSwipe() {
         Vector2 swipeVector = swipeEndPos - swipeStartPos;
         float swipeLength = swipeVector.magnitude;
 
@@ -45,16 +45,10 @@ public class SwipeThrow : MonoBehaviour {
         Vector3 forceDir = Camera.main.transform.TransformDirection(direction);
 
         //GameObject stone = Instantiate(stonePrefab, throwPoint.position, Quaternion.identity);
-        GameObject stone = Instantiate(stonePrefab);
+
+        GameObject stone = WPS.Instance.SpawnGameObjectAtLocation(stonePrefab, throwPoint.position);
 
         Rigidbody rb = stone.GetComponent<Rigidbody>();
-
-        (double latOffset, double longOffset) = PreplacedWorldObjects.Instance.GetGeographicOffsetFromCameraPosition(throwPoint.position);
-
-        double latitude = PreplacedWorldObjects.Instance.GetWorldPositioningManager().WorldTransform.OriginLatitude + latOffset;
-        double longitude = PreplacedWorldObjects.Instance.GetWorldPositioningManager().WorldTransform.OriginLongitude + longOffset;
-
-        PreplacedWorldObjects.Instance.GetObjectHelper().AddOrUpdateObject(stone, latitude, longitude, 0, Quaternion.identity);
 
         rb.isKinematic = false;
         rb.AddForce(forceDir * swipeLength * forceMultiplier, ForceMode.Impulse);
