@@ -1,7 +1,13 @@
 {
   "dependencies": {
+    "com.merry-yellow.code-assist": {
+      "version": "file:com.merry-yellow.code-assist",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.nianticlabs.lightship": {
-      "version": "file:C:/Users/0000a/Games/ardk-upm-3.4.0.tgz",
+      "version": "file:C:/Users/Niket/Downloads/ardk-upm-3.4.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -15,8 +21,17 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1"
       }
     },
+    "com.nianticlabs.lightship.sharedar": {
+      "version": "file:C:/Users/Niket/Downloads/sharedar-upm-3.4.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.nianticlabs.lightship": "3.4.0-2404081151",
+        "com.unity.netcode.gameobjects": "1.2.0"
+      }
+    },
     "com.nianticlabs.lightship.wps": {
-      "version": "file:C:/Users/0000a/Games/wps-upm-3.4.0.tgz",
+      "version": "file:C:/Users/Niket/Downloads/wps-upm-3.4.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -24,11 +39,31 @@
         "com.unity.xr.management": "4.0.1"
       }
     },
+    "com.unity.burst": {
+      "version": "1.8.18",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
       "version": "2.8.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.collections": {
+      "version": "1.2.4",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.test-framework": "1.1.31"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.editorcoroutines": {
@@ -100,6 +135,23 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.netcode.gameobjects": {
+      "version": "1.11.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.transport": "1.4.0",
+        "com.unity.nuget.mono-cecil": "1.10.1"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.mono-cecil": {
+      "version": "1.11.4",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.2.1",
       "depth": 1,
@@ -160,6 +212,17 @@
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.transport": {
+      "version": "1.5.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.collections": "1.2.4",
+        "com.unity.mathematics": "1.2.6"
       },
       "url": "https://packages.unity.com"
     },
@@ -244,7 +307,7 @@
     },
     "com.unity.xr.legacyinputhelpers": {
       "version": "2.1.11",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.vr": "1.0.0",
@@ -266,7 +329,7 @@
     },
     "com.unity.xr.openxr": {
       "version": "1.12.1",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.inputsystem": "1.6.3",
