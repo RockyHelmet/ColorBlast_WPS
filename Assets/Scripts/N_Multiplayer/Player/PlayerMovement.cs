@@ -61,6 +61,7 @@ public class PlayerMovement : NetworkBehaviour {
             playerCamera.transform.position = new Vector3(transform.position.x + cameraXoffset, transform.position.y + cameraYoffset, transform.position.z + cameraZoffset);
             playerCamera.transform.SetParent(transform);
             playerBody = transform;
+            cameraTransform = playerCamera.transform;
         }
     }
     void Update() {

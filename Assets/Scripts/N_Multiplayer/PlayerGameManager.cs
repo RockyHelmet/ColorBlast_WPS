@@ -7,6 +7,7 @@ using TMPro;
 public class PlayerGameManager : NetworkBehaviour {
     private ulong clientID;
     private int currentColorCode;
+    int newColor = -1;
 
     private GameManager_m gameManager_m;
 
@@ -53,7 +54,9 @@ public class PlayerGameManager : NetworkBehaviour {
     }
 
     private void ChangeColor() {
-        int newColor = Random.Range(0, 3);
+
+        do { newColor = Random.Range(0, 3); }
+        while (newColor == currentColorCode);
 
         if (AllPlayerDataManager.Instance != null) {
             AllPlayerDataManager.Instance.RequestColorChangeServerRpc(newColor);

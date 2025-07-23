@@ -18,50 +18,45 @@
       "hash": "fb4247cae53d668defc2e3b737146445aa835610"
     },
     "com.nianticlabs.lightship": {
-      "version": "https://github.com/niantic-lightship/ardk-upm.git",
+      "version": "file:../Lightship Packages/ardk-upm-3.4.0.tgz",
       "depth": 0,
-      "source": "git",
+      "source": "local-tarball",
       "dependencies": {
         "com.unity.editorcoroutines": "1.0.0",
-        "com.unity.xr.arfoundation": "5.1.4",
-        "com.unity.xr.arcore": "5.1.4",
-        "com.unity.xr.arkit": "5.1.4",
+        "com.unity.xr.arfoundation": "5.1.0",
+        "com.unity.xr.arcore": "5.1.0",
+        "com.unity.xr.arkit": "5.1.0",
         "com.unity.xr.openxr": "1.6.0",
         "com.unity.xr.core-utils": "2.1.0",
         "com.unity.xr.management": "4.0.1",
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.cloud.draco": "5.1.4",
-        "com.unity.burst": "1.8.17"
-      },
-      "hash": "3d330ee6180a2e6a89a72e7cb548d9365f318237"
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      }
+    },
+    "com.nianticlabs.lightship.sharedar": {
+      "version": "file:../Lightship Packages/sharedar-upm-3.4.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.nianticlabs.lightship": "3.4.0-2404081151",
+        "com.unity.netcode.gameobjects": "1.2.0"
+      }
     },
     "com.nianticlabs.lightship.wps": {
-      "version": "https://github.com/niantic-lightship/wps-upm.git",
+      "version": "file:../Lightship Packages/wps-upm-3.4.0.tgz",
       "depth": 0,
-      "source": "git",
+      "source": "local-tarball",
       "dependencies": {
-        "com.nianticlabs.lightship": "3.8.0-2409081646",
+        "com.nianticlabs.lightship": "3.4.0-2404081151",
         "com.unity.xr.management": "4.0.1"
-      },
-      "hash": "5c786ef83fe8232ea2649721141ddb3dc641de9c"
+      }
     },
     "com.unity.burst": {
       "version": "1.8.18",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.cloud.draco": {
-      "version": "5.1.4",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.8.11",
-        "com.unity.mathematics": "1.3.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -146,10 +141,20 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.3.1",
-      "depth": 2,
+      "version": "1.2.6",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.netcode.gameobjects": {
+      "version": "1.11.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.transport": "1.4.0",
+        "com.unity.nuget.mono-cecil": "1.10.1"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
@@ -219,6 +224,17 @@
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.transport": {
+      "version": "1.5.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.collections": "1.2.4",
+        "com.unity.mathematics": "1.2.6"
       },
       "url": "https://packages.unity.com"
     },

@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 7599187357469521130}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -246,8 +246,8 @@ MonoBehaviour:
   cameraTransform: {fileID: 0}
   ControlsGameObject: {fileID: 0}
   cameraXoffset: 0
-  cameraYoffset: 0
-  cameraZoffset: 0
+  cameraYoffset: 0.6
+  cameraZoffset: 0.6
 --- !u!114 &2018038679662503308
 MonoBehaviour:
   m_ObjectHideFlags: 0

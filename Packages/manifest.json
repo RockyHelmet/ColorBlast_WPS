@@ -1,8 +1,9 @@
 {
   "dependencies": {
     "com.niantic.lightship.maps": "https://github.com/niantic-lightship/maps-upm.git",
-    "com.nianticlabs.lightship": "https://github.com/niantic-lightship/ardk-upm.git",
-    "com.nianticlabs.lightship.wps": "https://github.com/niantic-lightship/wps-upm.git",
+    "com.nianticlabs.lightship": "file:../Lightship Packages/ardk-upm-3.4.0.tgz",
+    "com.nianticlabs.lightship.sharedar": "file:../Lightship Packages/sharedar-upm-3.4.0.tgz",
+    "com.nianticlabs.lightship.wps": "file:../Lightship Packages/wps-upm-3.4.0.tgz",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.development": "1.0.1",
     "com.unity.textmeshpro": "3.0.7",

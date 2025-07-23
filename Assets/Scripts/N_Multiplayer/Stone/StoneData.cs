@@ -7,6 +7,7 @@ public class StoneData : NetworkBehaviour {
     private NetworkVariable<ulong> owner = new(999);
     private NetworkVariable<bool> isActiveSelf = new(true);
 
+    private ulong localOwnerID;
 
     [SerializeField] private LayerMask targetLayer;  
     [SerializeField] private int bonusChance = 1;     
@@ -22,6 +23,7 @@ public class StoneData : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     public void SetOwnershipServerRpc(ulong id) {
         owner.Value = id;
+        localOwnerID = id;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -37,25 +39,25 @@ public class StoneData : NetworkBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
+        if (!NetworkObject.IsSpawned) return;
         if (!IsServer) return;
+
+        Debug.Log("throw id: " + localOwnerID.ToString());
 
         if (((1 << other.gameObject.layer) & targetLayer) == 0) return;
 
-        PlayerData playerData = AllPlayerDataManager.Instance.GetPlayerData(owner.Value);
+        PlayerData playerData = AllPlayerDataManager.Instance.GetPlayerData(localOwnerID);
 
         int currentColor = playerData.currentColor;
 
         if (other.CompareTag(gameManager_m.colors[currentColor])) {
-            AllPlayerDataManager.Instance.RequestAddScoreServerRpc(1, new ServerRpcParams {
-                Receive = new ServerRpcReceiveParams { SenderClientId = owner.Value }
-            });
+            AllPlayerDataManager.Instance.RequestAddScoreServerRpc(localOwnerID, 1);
+
         }
 
 
-        if (UnityEngine.Random.Range(1, 101) <= bonusChance) {
-            AllPlayerDataManager.Instance.RequestAddScoreServerRpc(10, new ServerRpcParams {
-                Receive = new ServerRpcReceiveParams { SenderClientId = owner.Value }
-            });
+        if (UnityEngine.Random.Range(1, 1001) <= bonusChance) {
+            AllPlayerDataManager.Instance.RequestAddScoreServerRpc(localOwnerID, 10);
         }
 
         Vector3Int gridPos = TargetSpawner_m.masterGrid_m.WorldToGrid(other.transform.position);
