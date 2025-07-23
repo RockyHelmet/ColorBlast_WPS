@@ -17,6 +17,7 @@ public class SwipeThrow_m : NetworkBehaviour {
     public override void OnNetworkSpawn() {
         if (IsOwner) {
             clientID = NetworkManager.LocalClientId;
+            Debug.Log("ID: " +  clientID.ToString());
         }
     }
 
@@ -24,19 +25,17 @@ public class SwipeThrow_m : NetworkBehaviour {
         if (!IsOwner) return;
 
         if (throwPoint == null)
-            throwPoint = transform.Find("ThrowPoint");
+            throwPoint = GameObject.FindGameObjectWithTag("ThrowPoint").transform;
     }
 
     void Update() {
-        if (!IsOwner) return;
+        if(!IsOwner) return;
 
-#if UNITY_ANDROID || UNITY_IOS
-        if (Input.touchCount > 0) {
+        if (Input.touchSupported && Input.touchCount > 0) {
             Touch touch = Input.GetTouch(0);
             HandleTouch(touch.phase, touch.position);
         }
-#else
-        if (Input.GetMouseButtonDown(0)) {
+        else if (Input.GetMouseButtonDown(0)) {
             swipeStartPos = Input.mousePosition;
             isSwiping = true;
         }
@@ -45,7 +44,6 @@ public class SwipeThrow_m : NetworkBehaviour {
             ShootFromSwipe();
             isSwiping = false;
         }
-#endif
     }
 
     void HandleTouch(TouchPhase phase, Vector2 position) {
@@ -55,6 +53,7 @@ public class SwipeThrow_m : NetworkBehaviour {
         else if (phase == TouchPhase.Ended) {
             swipeEndPos = position;
             ShootFromSwipe();
+            
         }
     }
 
@@ -68,9 +67,10 @@ public class SwipeThrow_m : NetworkBehaviour {
         Vector3 forceDir = Camera.main.transform.TransformDirection(direction);
 
         ThrowStoneServerRpc(forceDir * swipeLength * forceMultiplier);
+        
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void ThrowStoneServerRpc(Vector3 force, ServerRpcParams rpcParams = default) {
         if (stonePrefab == null || throwPoint == null) {
             Debug.LogError("Stone prefab or throw point not assigned!");
@@ -81,7 +81,7 @@ public class SwipeThrow_m : NetworkBehaviour {
         NetworkObject netObj = stone.GetComponent<NetworkObject>();
 
         netObj.Spawn();
-        stone.GetComponent<StoneData>().SetOwnershipServerRpc(clientID);
+        stone.GetComponent<StoneData>().SetOwnershipServerRpc(rpcParams.Receive.SenderClientId);
 
         Rigidbody rb = stone.GetComponent<Rigidbody>();
         rb.isKinematic = false;

@@ -161,8 +161,9 @@ public class AllPlayerDataManager : NetworkBehaviour {
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void RequestAddScoreServerRpc(int delta, ServerRpcParams rpcParams = default) {
-        ulong senderID = rpcParams.Receive.SenderClientId;
-        AddScore(senderID, delta);
+    public void RequestAddScoreServerRpc(ulong targetClientId, int scoreToAdd) {
+        AddScore(targetClientId, scoreToAdd);
+
+        Debug.Log("Added " + scoreToAdd + " to player: " + targetClientId);
     }
 }
