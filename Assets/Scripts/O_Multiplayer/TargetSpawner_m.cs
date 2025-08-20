@@ -4,7 +4,6 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class TargetSpawner_m : NetworkBehaviour {
-
     public static TargetSpawner_m Instance;
 
     [Header("Grid Variables")]
@@ -20,9 +19,17 @@ public class TargetSpawner_m : NetworkBehaviour {
     private int currentTargets;
     private bool isRespawning = false;
 
+    private Transform sharedSpace;   // SharedSpace reference
+
     private void Awake() {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        // Look for SharedSpace in the scene
+        sharedSpace = GameObject.FindWithTag("SharedSpace")?.transform;
+        if (sharedSpace == null) {
+            Debug.LogWarning("[TargetSpawner_m] No SharedSpace found! Falling back to world space.");
+        }
     }
 
     public override void OnNetworkSpawn() {
@@ -47,7 +54,7 @@ public class TargetSpawner_m : NetworkBehaviour {
         Debug.Log("SPAWNED INITIAL TARGETS");
     }
 
-    void Update() {
+    private void Update() {
         if (!IsServer) return;
 
         if (currentTargets < maxTargets && !isRespawning) {
@@ -59,7 +66,7 @@ public class TargetSpawner_m : NetworkBehaviour {
         currentTargets = Mathf.Max(0, currentTargets - 1);
     }
 
-    void SpawnGridTarget() {
+    private void SpawnGridTarget() {
         int x, y, z;
         int tries = 0;
 
@@ -72,7 +79,7 @@ public class TargetSpawner_m : NetworkBehaviour {
         }
         while (masterGrid_m.GetCellValue(x, y, z));
 
-        Vector3 spawnPos = masterGrid_m.GridToWorld(x, y, z);
+        Vector3 worldSpawnPos = masterGrid_m.GridToWorld(x, y, z);
         masterGrid_m.SwitchCellValue(x, y, z);
 
         GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Count)];
@@ -80,18 +87,32 @@ public class TargetSpawner_m : NetworkBehaviour {
             Debug.LogError("Null prefab in targetPrefabs list!");
             return;
         }
-        GameObject target = Instantiate(prefab, spawnPos, Quaternion.identity);
+
+        // If we have SharedSpace, convert to local-space coordinates
+        Vector3 localPos = worldSpawnPos;
+        Quaternion localRot = Quaternion.identity;
+
+        if (sharedSpace != null) {
+            localPos = sharedSpace.InverseTransformPoint(worldSpawnPos);
+            localRot = Quaternion.Inverse(sharedSpace.rotation) * Quaternion.identity; // adjust if you want rotation logic
+        }
+
+        // Instantiate under SharedSpace
+        GameObject target = Instantiate(prefab, sharedSpace != null ? sharedSpace : null);
+        target.transform.localPosition = localPos;
+        target.transform.localRotation = localRot;
 
         var netObj = target.GetComponent<NetworkObject>();
         if (netObj != null) {
             netObj.Spawn(true);
         }
         else {
-            Debug.LogError($"[TargetSpawner] Target prefab '{prefab.name}' is missing NetworkObject component!");
+            Debug.LogError($"[TargetSpawner] Target prefab '{prefab.name}' is missing NetworkObject!");
         }
 
         currentTargets++;
     }
+
 
     private IEnumerator StartRespawn() {
         isRespawning = true;

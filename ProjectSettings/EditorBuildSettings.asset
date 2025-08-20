@@ -5,15 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/Multiplayer.unity
-    guid: c331963c7ee59a241a14bf9e9d0b42dd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: ff314bddb7805244f9d46843dbc12eba
+  - enabled: 0
+    path: Assets/Scenes/Lobby.unity
+    guid: e594a8c16dfa29943849175ca8d2a29a
+  - enabled: 1
+    path: Assets/Scenes/Multiplayer.unity
+    guid: 26d1b00bf12c77f4ba4945030f778894
   m_configObjects:
     Niantic.Lightship.AR.LightshipSettings: {fileID: 11400000, guid: d2c5dfdc4d9cd7748937b43baded63be, type: 2}
     Niantic.Lightship.AR.WorldPositioningSettings: {fileID: 11400000, guid: 90e331eb6567f61489e18079f877bb07, type: 2}

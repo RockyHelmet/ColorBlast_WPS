@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using Niantic.Lightship.SharedAR.Colocalization;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,14 +10,15 @@ public class StartGameAR : MonoBehaviour {
 
     [SerializeField] private Texture2D _targetImage;
     [SerializeField] private float _targetImageSize;
+
     private string roomName = "TestRoom";
 
-    [SerializeField] private Button StartGameButton;
     [SerializeField] private Button CreateRoomButton;
     [SerializeField] private Button JoinRoomButton;
     [SerializeField] private GameObject UIPanel;
-    [SerializeField] private GameObject SpawnPanel;
+
     private bool isHost;
+    private bool networkStarted = false;
 
     public static event Action OnStartSharedSpaceHost;
     public static event Action OnJoinSharedSpaceClient;
@@ -30,41 +28,34 @@ public class StartGameAR : MonoBehaviour {
     private void Awake() {
         DontDestroyOnLoad(gameObject);
         UIPanel.SetActive(true);
-        SpawnPanel.SetActive(false);
-        _sharedSpaceManager.sharedSpaceManagerStateChanged += SharedSpaceManagerOnsharedSpaceManagerStateChanged;
 
-        StartGameButton.onClick.AddListener(StartGame);
+        // Subscribe to SharedSpace state
+        _sharedSpaceManager.sharedSpaceManagerStateChanged += SharedSpaceManagerOnStateChanged;
+
+        // Button listeners
         CreateRoomButton.onClick.AddListener(CreateGameHost);
         JoinRoomButton.onClick.AddListener(JoinGameClient);
-
-        StartGameButton.interactable = false;
-
     }
 
-    private void SharedSpaceManagerOnsharedSpaceManagerStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs obj) {
-        if (obj.Tracking) {
-            StartGameButton.interactable = true;
+    private void SharedSpaceManagerOnStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs args) {
+        if (args.Tracking) {
             CreateRoomButton.interactable = false;
             JoinRoomButton.interactable = false;
-        }
-    }
 
-    void StartGame() {
-        OnStartGame?.Invoke();
-
-        if (isHost) {
-            NetworkManager.Singleton.StartHost();
+            // Start network only once, when tracking is ready
+            if (!networkStarted) {
+                networkStarted = true;
+                StartGame();
+            }
         }
         else {
-            NetworkManager.Singleton.StartClient();
+            // Optionally re-enable buttons if tracking lost
+            CreateRoomButton.interactable = true;
+            JoinRoomButton.interactable = true;
         }
-        UIPanel.SetActive(false);
-        SpawnPanel.SetActive(true);
-
     }
 
-
-    void StartSharedSpace() {
+    private void StartSharedSpace() {
         OnStartSharedSpace?.Invoke();
 
         if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.MockColocalization) {
@@ -74,7 +65,6 @@ public class StartGameAR : MonoBehaviour {
                 MAX_AMOUNT_CLIENTS_ROOM,
                 "MockColocalizationDemo"
             );
-
             _sharedSpaceManager.StartSharedSpace(mockTrackingArgs, roomArgs);
             return;
         }
@@ -82,29 +72,38 @@ public class StartGameAR : MonoBehaviour {
         if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.ImageTrackingColocalization) {
             var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(
                 _targetImage, _targetImageSize
-                );
-
+            );
             var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
                 roomName,
                 MAX_AMOUNT_CLIENTS_ROOM,
                 "ImageColocalization"
             );
-
             _sharedSpaceManager.StartSharedSpace(imageTrackingOptions, roomArgs);
-            return;
         }
-
     }
-    void CreateGameHost() {
+
+    private void StartGame() {
+        OnStartGame?.Invoke();
+
+        if (isHost)
+            NetworkManager.Singleton.StartHost();
+        else
+            NetworkManager.Singleton.StartClient();
+
+        UIPanel.SetActive(false);
+    }
+
+    private void CreateGameHost() {
         isHost = true;
         OnStartSharedSpaceHost?.Invoke();
         StartSharedSpace();
+        // Do NOT call StartGame() here. It will start after tracking is ready
     }
 
-    void JoinGameClient() {
+    private void JoinGameClient() {
         isHost = false;
         OnJoinSharedSpaceClient?.Invoke();
         StartSharedSpace();
+        // Do NOT call StartGame() here. It will start after tracking is ready
     }
-
 }

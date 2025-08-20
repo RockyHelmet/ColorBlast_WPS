@@ -33,12 +33,20 @@ public class PlayerGameManager : NetworkBehaviour {
         }
     }
 
-    private void Start() {
-        gameManager_m = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager_m>();
+    private IEnumerator Start() {
+        GameObject gmObj = null;
+        while (gmObj == null) {
+            gmObj = GameObject.FindGameObjectWithTag("GameManager");
+            yield return null;
+        }
+
+        gameManager_m = gmObj.GetComponent<GameManager_m>();
+        Debug.Log("GameManager_m assigned: " + gameManager_m);
     }
 
     private void Update() {
-        if (!IsOwner) return;
+        if (!IsOwner || gameManager_m == null || !AllPlayerDataManager.Instance) return;
+
 
         colorTimer += Time.deltaTime;
 

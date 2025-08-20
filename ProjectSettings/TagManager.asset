@@ -13,7 +13,9 @@ TagManager:
   - GameManager
   - TargetSpawner
   - ControlPanelUI
-  - XROriginDefault
+  - XROrigin
+  - SharedSpace
+  - HeadProxy
   layers:
   - Default
   - TransparentFX
